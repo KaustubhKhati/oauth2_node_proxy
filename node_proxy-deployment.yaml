@@ -1,0 +1,53 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: node-proxy-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: node-proxy
+    spec:
+      containers:
+        -
+          image: <IMAGE_ID>
+          imagePullPolicy: Always
+          name: node-proxy
+          ports:
+            - name: web
+              containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+          readinessProbe:
+              httpGet:
+                path: /
+                port: 3000
+                scheme: HTTP
+              initialDelaySeconds: 10
+              timeoutSeconds: 1
+              periodSeconds: 15
+          livenessProbe:
+              httpGet:
+                path: /
+                port: 3000
+                scheme: HTTP
+              initialDelaySeconds: 15
+              timeoutSeconds: 1
+              periodSeconds: 15 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: node-proxy
+  name: node-proxy-service
+spec:
+  type: NodePort
+  ports:
+  - name: web
+    port: 80
+    targetPort: 3000
+  selector:
+    app: node-proxy
