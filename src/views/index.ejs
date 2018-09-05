@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <% include ./head %>
   </head>
+  <header>
+    <% include ./header %>
+  </header>
   <body>
-    <button id="dashboard" class="float-left submit-button" >Dashboard</button>
+    <ul>
+    <% dashboards.forEach(function(dashboard) { %>
+    <button id='<%= dashboard.name %>' class="btn btn-primary float-left submit-button" ><%= dashboard.name %></button>
     <script type="text/javascript">
-    	document.getElementById("dashboard").onclick = function () {
-        location.href = "https://dashboard.example.com";
+      document.getElementById('<%= dashboard.name %>').onclick = function () {
+        location.href = "<%= dashboard.link %>";
     };
-	</script>
-	<button id="grafana" class="float-left submit-button" >Grafana</button>
-    <script type="text/javascript">
-    	document.getElementById("grafana").onclick = function () {
-        location.href = "https://grafana.example.com";
-    };
-	</script>
+    </script>
+    <% }); %>
+  </ul>
   </body>
 </html>
